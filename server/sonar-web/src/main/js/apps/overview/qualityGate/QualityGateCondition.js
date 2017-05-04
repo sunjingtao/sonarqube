@@ -25,7 +25,7 @@ import { DrilldownLink } from '../../../components/shared/drilldown-link';
 import Measure from '../../component-measures/components/Measure';
 import { getPeriodValue, isDiffMetric, formatMeasure } from '../../../helpers/measures';
 import { translate } from '../../../helpers/l10n';
-import { getPeriod, getPeriodDate } from '../../../helpers/periods';
+import { getPeriod } from '../../../helpers/periods';
 import { getComponentIssuesUrl } from '../../../helpers/urls';
 import IssueTypeIcon from '../../../components/ui/IssueTypeIcon';
 
@@ -97,7 +97,6 @@ export default class QualityGateCondition extends React.PureComponent {
     const { component, periods, condition } = this.props;
 
     const period = getPeriod(periods, condition.period);
-    const periodDate = getPeriodDate(period);
 
     const className = classNames(
       'overview-quality-gate-condition',
@@ -124,8 +123,7 @@ export default class QualityGateCondition extends React.PureComponent {
           className={className}
           component={component.key}
           metric={condition.measure.metric.key}
-          period={condition.period}
-          periodDate={periodDate}>
+          sinceLeakPeriod={true}>
           {children}
         </DrilldownLink>;
   }

@@ -5,7 +5,7 @@ exports[`new_open_issues 1`] = `
   className="overview-quality-gate-condition overview-quality-gate-condition-error"
   component="abcd-key"
   metric="new_open_issues"
-  periodDate={null}
+  sinceLeakPeriod={true}
 >
   <div
     className="overview-quality-gate-condition-container"
@@ -241,7 +241,7 @@ exports[`open_issues 1`] = `
   className="overview-quality-gate-condition overview-quality-gate-condition-error"
   component="abcd-key"
   metric="open_issues"
-  periodDate={null}
+  sinceLeakPeriod={true}
 >
   <div
     className="overview-quality-gate-condition-container"
