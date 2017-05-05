@@ -136,9 +136,9 @@
 }
 
 .navbar-search-icon {
-  position: absolute;
-  top: 4px;
-  left: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
   color: @secondFontColor;
 
   &:before {
@@ -155,8 +155,31 @@
 
 .navbar-search-subtitle {
   position: absolute;
-  top: 5px;
+  top: 4px;
   right: 40px;
+  line-height: @formControlHeight;
+}
+
+.navbar-search-item-icons {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+
+  > * {
+    position: absolute;
+    z-index: 5;
+    top: 0;
+    left: 0;
+  }
+
+  > .icon-star,
+  > .icon-clock {
+    z-index: 6;
+    top: -5px;
+    left: -5px;
+  }
 }
 
 
@@ -293,6 +316,8 @@
 
 .global-navbar-search-dropdown {
   max-height: 80vh;
+  padding: 0;
   overflow-y: auto;
   overflow-x: hidden;
+  box-shadow: @defaultShadow;
 }

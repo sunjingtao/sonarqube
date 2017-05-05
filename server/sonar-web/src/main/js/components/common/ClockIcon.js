@@ -17,35 +17,31 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-export const mockEvent = {
-  target: { blur() {} },
-  currentTarget: { blur() {} },
-  preventDefault() {},
-  stopPropagation() {}
+// @flow
+import React from 'react';
+import classNames from 'classnames';
+
+type Props = {
+  className?: string,
+  size?: number
 };
 
-export const click = (element, event = {}) => element.simulate('click', { ...mockEvent, ...event });
+export default function ClockIcon(props: Props) {
+  /* eslint max-len: 0 */
+  return (
+    <svg
+      className={classNames('icon-clock', props.className)}
+      viewBox="0 0 16 16"
+      width={props.size}
+      height={props.size}>
+      <g fill="#fff" stroke="#ADADAD" transform="matrix(1.4 0 0 1.4 .3 .7)">
+        <circle cx="5.5" cy="5.2" r="5" />
+        <path fillRule="nonzero" d="M5.6 2.9v2.7l2-.5" />
+      </g>
+    </svg>
+  );
+}
 
-export const submit = element =>
-  element.simulate('submit', {
-    preventDefault() {}
-  });
-
-export const change = (element, value) =>
-  element.simulate('change', {
-    target: { value },
-    currentTarget: { value }
-  });
-
-export const keydown = keyCode => {
-  const event = new KeyboardEvent('keydown', { keyCode });
-  document.dispatchEvent(event);
-};
-
-export const elementKeydown = (element, keyCode) => {
-  element.simulate('keydown', {
-    currentTarget: { element },
-    keyCode,
-    preventDefault() {}
-  });
+ClockIcon.defaultProps = {
+  size: 16
 };

@@ -17,80 +17,43 @@
  * along with this program; if not, write to the Free Software Foundation,
  * Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-import Backbone from 'backbone';
+// @flow
 import React from 'react';
-import { connect } from 'react-redux';
 import key from 'keymaster';
-import SearchView from './SearchView';
-import { getCurrentUser } from '../../../../store/rootReducer';
+import GlobalNavSearchForm from './GlobalNavSearchForm';
 
-function contains(root, node) {
-  while (node) {
-    if (node === root) {
-      return true;
-    }
-    node = node.parentNode;
-  }
-  return false;
-}
+type Props = {
+  appState: { organizationsEnabled: boolean },
+  currentUser: { isLoggedIn: boolean }
+};
 
-class GlobalNavSearch extends React.PureComponent {
-  state = { open: false };
+type State = {
+  open: boolean
+};
+
+export default class GlobalNavSearch extends React.PureComponent {
+  props: Props;
+  state: State = { open: false };
 
   componentDidMount() {
     key('s', () => {
-      const isModalOpen = document.querySelector('html').classList.contains('modal-open');
-      if (!isModalOpen) {
-        this.openSearch();
-      }
+      this.setState({ open: true });
       return false;
     });
   }
 
   componentWillUnmount() {
-    this.closeSearch();
     key.unbind('s');
   }
 
-  openSearch = () => {
-    document.addEventListener('click', this.onClickOutside);
-    this.setState({ open: true }, this.renderSearchView);
-  };
+  openSearch = () => this.setState({ open: true });
 
-  closeSearch = () => {
-    document.removeEventListener('click', this.onClickOutside);
-    this.resetSearchView();
-    this.setState({ open: false });
-  };
+  closeSearch = () => this.setState({ open: false });
 
-  resetSearchView = () => {
-    if (this.searchView) {
-      this.searchView.destroy();
-    }
-  };
-
-  onClick = e => {
-    e.preventDefault();
-    if (this.state.open) {
-      this.closeSearch();
-    } else {
-      this.openSearch();
-    }
-  };
-
-  onClickOutside = e => {
-    if (!contains(this.refs.dropdown, e.target)) {
-      this.closeSearch();
-    }
-  };
-
-  renderSearchView = () => {
-    const searchContainer = this.refs.container;
-    this.searchView = new SearchView({
-      model: new Backbone.Model(this.props),
-      hide: this.closeSearch
-    });
-    this.searchView.render().$el.appendTo(searchContainer);
+  onClick = (event: Event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    this.setState(state => ({ open: !state.open }));
   };
 
   render() {
@@ -100,17 +63,13 @@ class GlobalNavSearch extends React.PureComponent {
         <a className="navbar-search-dropdown" href="#" onClick={this.onClick}>
           <i className="icon-search navbar-icon" />&nbsp;<i className="icon-dropdown" />
         </a>
-        <div
-          ref="container"
-          className="dropdown-menu dropdown-menu-right global-navbar-search-dropdown"
-        />
+        {this.state.open &&
+          <GlobalNavSearchForm
+            appState={this.props.appState}
+            currentUser={this.props.currentUser}
+            onClose={this.closeSearch}
+          />}
       </li>
     );
   }
 }
-
-const mapStateToProps = state => ({
-  currentUser: getCurrentUser(state)
-});
-
-export default connect(mapStateToProps)(GlobalNavSearch);
