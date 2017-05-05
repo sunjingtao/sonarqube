@@ -98,6 +98,7 @@ type State = {
   openIssuesByLine: { [number]: boolean },
   selectedIssue?: string,
   sources?: Array<SourceLine>,
+  sourceRemoved: boolean,
   symbolsByLine: { [number]: Array<string> }
 };
 
@@ -144,6 +145,7 @@ export default class SourceViewerBase extends React.PureComponent {
       openIssuesByLine: {},
       selectedIssue: props.selectedIssue,
       selectedIssueLocation: null,
+      sourceRemoved: false,
       symbolsByLine: {}
     };
   }
@@ -248,6 +250,8 @@ export default class SourceViewerBase extends React.PureComponent {
       if (this.mounted) {
         if (response.status === 403) {
           this.setState({ component, loading: false, notAccessible: true });
+        } else if (response.status === 404) {
+          this.setState({ component, loading: false, sourceRemoved: true });
         }
       }
     };
@@ -307,9 +311,9 @@ export default class SourceViewerBase extends React.PureComponent {
       const onFailLoadSources = ({ response }) => {
         // TODO handle other statuses
         if (this.mounted) {
-          if (response.status === 403) {
+          if ([403, 404].includes(response.status)) {
             reject(response);
-          } else if (response.status === 404) {
+          } else {
             resolve([]);
           }
         }
@@ -598,6 +602,10 @@ export default class SourceViewerBase extends React.PureComponent {
         {this.state.notAccessible &&
           <div className="alert alert-warning spacer-top">
             {translate('code_viewer.no_source_code_displayed_due_to_security')}
+          </div>}
+        {this.state.sourceRemoved &&
+          <div className="alert alert-warning spacer-top">
+            {translate('code_viewer.no_source_code_displayed_due_to_source_removed')}
           </div>}
         {this.state.sources != null && this.renderCode(this.state.sources)}
       </div>
