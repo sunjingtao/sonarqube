@@ -55,7 +55,7 @@ class GlobalNavUser extends React.PureComponent {
     return (
       <li className="dropdown js-user-authenticated">
         <a className="dropdown-toggle" data-toggle="dropdown" href="#">
-          <Avatar email={currentUser.email} size={20} />&nbsp;
+          <Avatar email={currentUser.email} name={currentUser.name} size={20} />&nbsp;
           {currentUser.name}&nbsp;<i className="icon-dropdown" />
         </a>
         <ul className="dropdown-menu dropdown-menu-right">
